@@ -1,0 +1,9 @@
+a{
+  text-decoration: none;
+}
+
+a.active li{
+    color: red;
+    background-color: #F7F2FA;
+    border-radius: 100px;
+}
