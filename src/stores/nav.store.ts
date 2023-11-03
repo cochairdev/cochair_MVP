@@ -10,6 +10,6 @@ interface NavState {
 export const useNavStore = create<NavState>()((set) => ({
     isOpen: false,
     drawerWidth:240,
-    handleOpen : ()=>set((state) => ({ isOpen: true })),
-    handleClose : ()=>set((state) => ({ isOpen: false })),
+    handleOpen : ()=>set(() => ({ isOpen: true })),
+    handleClose : ()=>set(() => ({ isOpen: false })),
 }))

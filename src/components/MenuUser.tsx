@@ -21,8 +21,8 @@ export default function MenuUser() {
           </IconButton>
         </Grid>  
         <Grid item>
-          <Typography sx={{color:"#1D1B20"   , fontWeight:600 }}>Jhon Doe</Typography>
-          <Typography sx={{color:"#49454F"  , fontWeight:400}}>jhon_doe@gmail.com</Typography>
+          <Typography sx={{color:"#1D1B20"   , fontWeight:600 }}>{name} {lastName}</Typography>
+          <Typography sx={{color:"#49454F"  , fontWeight:400}}>{email}</Typography>
         </Grid>
       </Grid>
     )

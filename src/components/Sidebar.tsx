@@ -79,10 +79,10 @@ const navIcons = [
 interface Props {
   open: boolean;
   navItems: navItem[];
-  handleDrawerClose: () => void;
+  handleDrawerClose?: () => void;
 }
 
-export const Sidebar = ({ open, navItems, handleDrawerClose }: Props) => {
+export const Sidebar = ({ open, navItems }: Props) => {
   return (
     <Drawer variant="permanent" open={open}>
       <DrawerHeader>
