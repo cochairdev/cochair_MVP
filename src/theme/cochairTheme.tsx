@@ -1,7 +1,8 @@
 import { createTheme } from '@mui/material/styles';
-
+  import darkScrollbar from "@mui/material/darkScrollbar";
 // A custom theme for this app
 const theme = createTheme({
+  
   palette: {
     mode: "light",
     primary: {
@@ -12,11 +13,11 @@ const theme = createTheme({
     },
     success:{
       main: "#09AF00"
-  
     },
+    
     background: {
-      default: "#dddddd",
-      paper: "#ffffff",
+    //  default: "#ffffff",
+     
     },
   },
   typography: {
@@ -28,20 +29,23 @@ const theme = createTheme({
   
   },
   components: {
-    MuiListItemButton: {
+    MuiCssBaseline: {
       styleOverrides: {
-        root: {
-          borderRadius: "100px",
-          transition: "background 1s, color 1s",
-          color:"#49454F",
-          '&:hover': {
-            backgroundColor: "#F7F2FA",
-            borderRadius: "100px",
+        body: {
+          ...darkScrollbar(),
+          backgroundColor: "#DDD",
+         
         }
+      }
+    },
+    MuiAppBar:{
+      styleOverrides:{
+        root:{
+          backgroundColor: "#FFF",   
         }
-      },
+      }
     }
-  }
-});
+    }
+})
 
 export default theme;
