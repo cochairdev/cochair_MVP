@@ -69,6 +69,8 @@ export const Carousel = ({ images }: Props) => {
                 steps={maxSteps}
                 position="static"
                 activeStep={activeStep} 
+                backButton={''}
+                nextButton={''}
                 sx={{ 
                     paddingTop:10,
                     backgroundColor:'transparent'
