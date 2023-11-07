@@ -1,6 +1,25 @@
 import { createTheme } from '@mui/material/styles';
   import darkScrollbar from "@mui/material/darkScrollbar";
-// A custom theme for this app
+  declare module '@mui/material/styles' {
+    interface TypographyVariants {
+      poster: React.CSSProperties;
+    }
+  
+    // allow configuration using `createTheme`
+    interface TypographyVariantsOptions {
+      poster?: React.CSSProperties;
+    }
+  }
+  
+  // Update the Typography's variant prop options
+  declare module '@mui/material/Typography' {
+    interface TypographyPropsVariantOverrides {
+      poster: true;
+      h3: false;
+    }
+  }
+  
+  // A custom theme for this app
 const theme = createTheme({
   
   palette: {
@@ -21,11 +40,17 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: [
-      'Montserrat',
-      'Roboto',
-      'sans-serif',
-    ].join(','),
+ 
+    button:{
+      fontFamily:'"Roboto", sans-serif'
+    },
+    poster: {
+      fontSize: '2rem',
+      color:' #FFF',
+      fontFamily: "'Montserrat',  sans-serif",
+      fontWeight: 700,
+    },
+    
   
   },
   components: {

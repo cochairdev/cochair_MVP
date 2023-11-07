@@ -108,6 +108,7 @@ export const Sidebar = ({ open, navItems }: Props) => {
                 sx={{ display: "block" }}
               >
                 <ListItemButton
+                  disableRipple
                   sx={{
                     minHeight: 48,
                     justifyContent: open ? "initial" : "center",
