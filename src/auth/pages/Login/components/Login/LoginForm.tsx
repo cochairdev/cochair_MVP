@@ -69,7 +69,7 @@ export const LoginForm = ({ handleSubmit }: LoginForm) => {
       rePassword: data.get("rePassword"),
 
     });
-    handleSubmit(data);
+    handleSubmit();
   };
 
   return (
