@@ -6,8 +6,10 @@ import {
 
 import LinkedlnIcon from '@mui/icons-material/LinkedIn';
 import GoogleIcon from '@mui/icons-material/Google';
-
-export const LoginSocial = () => {
+interface Props{
+  handleLoginGoogle :() => void
+}
+export const LoginSocial = ({handleLoginGoogle}: Props) => {
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
     <Button
@@ -22,6 +24,7 @@ export const LoginSocial = () => {
         borderRadius: 100,
         borderColor: "#CAC4D0"
       }}
+      onClick={handleLoginGoogle}
     >
       Google
     </Button>

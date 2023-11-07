@@ -17,6 +17,9 @@ export const LoginPage = () => {
   const handleSubmit = () => {
     console.log('handleSubmit')
   }
+  const loginGoogle = () => {
+    //handleLoginGoogle()
+  }
 
   return (
     <Layout>
@@ -34,7 +37,7 @@ export const LoginPage = () => {
             </Typography>
           </Box>
 
-          <LoginSocial/>
+          <LoginSocial handleLoginGoogle={loginGoogle}/>
           
           <Divider sx={{
             fontStyle: 'italic',
