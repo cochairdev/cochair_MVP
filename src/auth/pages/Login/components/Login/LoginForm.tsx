@@ -1,111 +1,137 @@
-import React from 'react'
-import Layout from "../layout/Layout"
-import Avatar from '@mui/material/Avatar';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Paper from '@mui/material/Paper';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
-import Typography from '@mui/material/Typography';
-import FormControl from '@mui/material/FormControl';
-import InputLabel from '@mui/material/InputLabel';
-import Input from '@mui/material/Input';
-import InputAdornment from '@mui/material/InputAdornment';
-import IconButton from '@mui/material/IconButton';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
-import OutlinedInput from '@mui/material/OutlinedInput';
+import { useState } from "react";
 
-interface LoginForm{
-    handleSubmit:()=>void
+import {
+  Button,
+  TextField,
+  Box,
+  FormControl,
+  InputLabel,
+  FormHelperText,
+} from "@mui/material";
+
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import { initSignUpState } from "../../../../../lib/signUp";
+
+interface LoginForm {
+  handleSubmit: () => void;
 }
 
-export const LoginForm = ({handleSubmit}: LoginForm) => {
-    const [showPassword, setShowPassword] = React.useState(false);
+export const LoginForm = ({ handleSubmit }: LoginForm) => {
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
-  
-    const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-      event.preventDefault();
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [loginForm, setLoginForm] = useState(initSignUpState);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () =>
+    setShowConfirmPassword((show) => !show);
+
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+  const handleMouseDownConfirmPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
+    event.preventDefault();
+  };
+  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value, id } = e.target;
+
+    const newInputs = [...loginForm];
+    const index = newInputs.findIndex((item) => item.id === id);
+    const input = newInputs[index];
+    const isValid = input.isValid(value);
+
+    newInputs[index] = {
+      ...input,
+      value,
+      error: !isValid,
+      helperText: input.getHelperText(!isValid),
     };
 
+    setLoginForm(newInputs);
+
+  };
+  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    console.log({
+      email: data.get("email"),
+      lastName: data.get("lastName"),
+      company: data.get("company"),
+      password: data.get("password"),
+      rePassword: data.get("rePassword"),
+
+    });
+  };
+
   return (
-    <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 1 }}>
-   
-   <Grid container spacing={3}>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="name"
-            name="name"
-            label="Name"
-            fullWidth
-            autoComplete="given-name"
-          
-          />
-        </Grid>
-        <Grid item xs={12} sm={6}>
-          <TextField
-            required
-            id="lastName"
-            name="lastName"
-            label="Last name"
-            fullWidth
-            autoComplete="family-name"
-            
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <TextField
-            required
-            id="email"
-            name="email"
-            label="Email"
-            fullWidth
-          />
-        </Grid>
-       
-        <Grid item xs={12} sm={12}>
-          <TextField
-            required
-            id="company"
-            name="company"
-            label="Company"
-            fullWidth  
-          />
-        </Grid>
-       
-        <Grid item xs={12} sm={6}>
-        <FormControl>
-          <InputLabel htmlFor="standard-adornment-password">Password</InputLabel>
+    <Box
+      component="form"
+      noValidate
+      onSubmit={handleFormSubmit}
+      sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}
+    >
+      <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5 }}>
+        <TextField
+          id={loginForm[0].id}
+          name="name"
+          label="Name"
+          fullWidth
+          helperText={loginForm[0].helperText}
+          autoComplete="given-name"
+          value={loginForm[0].value}
+          error={loginForm[0].error}
+          onChange={onChange}
+        />
+        <TextField
+          id={loginForm[1].id}
+          name="lastName"
+          label="Last name"
+          fullWidth
+          helperText={loginForm[1].helperText}
+          autoComplete="family-name"
+          value={loginForm[1].value}
+          error={loginForm[1].error}
+          onChange={onChange}
+        />
+      </Box>
+      <TextField
+        id={loginForm[2].id}
+        name="email"
+        label="Email"
+        fullWidth
+        helperText={loginForm[2].helperText}
+        value={loginForm[2].value}
+        error={loginForm[2].error}
+        onChange={onChange}
+      />
+      <TextField
+        id={loginForm[3].id}
+        name="company"
+        label="Company"
+        fullWidth
+        helperText={loginForm[3].helperText}
+        value={loginForm[3].value}
+        error={loginForm[3].error}
+        onChange={onChange}
+      />
+      <Box sx={{ display: "flex", flexDirection: "row", gap: 1.5 }}>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel htmlFor="password">Password</InputLabel>
           <OutlinedInput
-            id="standard-adornment-password"
-            type={showPassword ? 'text' : 'password'}
-            endAdornment={
-              <InputAdornment position="end">
-                <IconButton
-                  aria-label="toggle password visibility"
-                  onClick={handleClickShowPassword}
-                  onMouseDown={handleMouseDownPassword}
-                >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
-                </IconButton>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        </Grid>
-        
-        <Grid item xs={12} sm={6}>
-        <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
-          <InputLabel htmlFor="outlined-adornment-password">Password</InputLabel>
-          <OutlinedInput
-            id="outlined-adornment-password"
-            type={showPassword ? 'text' : 'password'}
+            id={loginForm[4].id}
+            name="password"
+            value={loginForm[4].value}
+            error={loginForm[4].error}
+            onChange={onChange}
+            type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -114,27 +140,54 @@ export const LoginForm = ({handleSubmit}: LoginForm) => {
                   onMouseDown={handleMouseDownPassword}
                   edge="end"
                 >
-                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
+            label="Password"
+          />
+          {loginForm[4].error && (
+            <FormHelperText error id="accountId-error" sx={{ marginLeft: 0 }}>
+            {loginForm[4].helperText}
+            </FormHelperText>
+          )}
+        </FormControl>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel htmlFor="repeat_password">Confirm password</InputLabel>
+          <OutlinedInput
+            id={loginForm[5].id}
+            value={loginForm[5].value}
+            onChange={onChange}
+            error={loginForm[4].error}
+            type={showConfirmPassword ? "text" : "password"}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowConfirmPassword}
+                  onMouseDown={handleMouseDownConfirmPassword}
+                  edge="end"
+                >
+                  {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
             }
             label="Password"
           />
         </FormControl>
-        </Grid>
-         <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveCard" value="yes" />}
-            label="Remember credit card details for next time"
-          />
-        </Grid>
-        <Grid item xs={12}>
-          <FormControlLabel
-            control={<Checkbox color="secondary" name="saveAddress" value="yes" />}
-            label="Use this address for payment details"
-          />
-        </Grid>
-        </Grid>
-  </Box>
-  )
-}
+      </Box>
+      <Button
+        type="submit"
+        fullWidth
+        variant="contained"
+        sx={{
+          backgroundColor: "#3F51B5",
+          marginTop: 2,
+          borderRadius: 100,
+        }}
+      >
+        Sign up
+      </Button>
+    </Box>
+  );
+};
