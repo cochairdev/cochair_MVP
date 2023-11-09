@@ -10,6 +10,7 @@ interface Props{
   handleLoginGoogle :() => void
 }
 export const LoginSocial = ({handleLoginGoogle}: Props) => {
+  
   return (
     <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
     <Button
