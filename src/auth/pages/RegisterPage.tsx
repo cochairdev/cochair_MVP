@@ -1,5 +1,36 @@
+import Layout from "../layout/Layout"
+
+import {  Divider } from '@mui/material';
+import { LoginSocial } from './Login/components/Login/LoginSocial';
+
+
+import { RegisterForm } from "./Register/RegisterForm";
+import { useAppDispatch } from "../../store";
+import { authGoogle } from "../../firebase/providers";
+
 export const RegisterPage = () => {
+
+  const dispatch = useAppDispatch()
+
+
+  const loginGoogle = () => {
+    //handleLoginGoogle()
+    dispatch(authGoogle())
+
+  }
+
   return (
-    <div>RegisterPage</div>
+    <Layout title="Welcome to Cochair" subtitle="Select a method to sign up">
+        <LoginSocial handleLoginGoogle={loginGoogle}/>
+          
+          <Divider sx={{
+            fontStyle: 'italic',
+            color: '#666',
+          }}>
+            Or continue manually
+          </Divider>
+          <RegisterForm/>
+  
+    </Layout>
   )
 }
