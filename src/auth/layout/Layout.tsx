@@ -1,4 +1,4 @@
-import { Grid, Paper, Typography, Divider, Box } from '@mui/material';
+import { Grid, Paper, Typography, Box } from '@mui/material';
 import CochairIcon from '../../assets/images/logo_cochair.svg';
 import { Carousel } from '../pages/Login/components/Carousel';
 import { images } from '../../lib/imagesCarouse';

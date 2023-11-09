@@ -15,8 +15,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { initLoginState } from "../../../../../lib";
-import { useAppDispatch, useAppSelector } from "../../../../../store";
-import { registerUserWithEmailPassword } from "../../../../../firebase/providers";
+import { useAppSelector } from "../../../../../store";
 interface LoginForm {
   //handleSubmit?: () => void;
 }
@@ -24,7 +23,6 @@ interface LoginForm {
 export const LoginForm = () => {
 
   const {status} = useAppSelector((state) => state.auth);
-  const dispatch = useAppDispatch()
 
   const isAutenticating = useMemo(() => status === 'checking', [status]);
 

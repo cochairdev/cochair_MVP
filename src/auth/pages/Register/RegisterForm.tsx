@@ -18,11 +18,7 @@ import { initSignUpState } from "../../../lib/signUp";
 import { useAppDispatch } from "../../../store";
 import { registerUserWithEmailPassword } from "../../../firebase/providers";
 
-interface LoginForm {
-  handleSubmit: () => void;
-}
-
-export const RegisterForm = ({ handleSubmit }: LoginForm) => {
+export const RegisterForm = () => {
 
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);

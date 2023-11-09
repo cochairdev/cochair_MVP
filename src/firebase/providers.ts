@@ -12,23 +12,15 @@ interface RegisterData{
 }
 export const registerUserWithEmailPassword = createAsyncThunk('register/emailPassword',
     //Declare the type your function argument here:
-    async (userData:RegisterData) => {
+    async (userData:RegisterData, {rejectWithValue}) => {
         
         const {email,password, name, lastName} =  userData;
-        
-            const dataUser = await createUserWithEmailAndPassword(FirebaseAppAuth, email,password);
+            try{
+                const dataUser = await createUserWithEmailAndPassword(FirebaseAppAuth, email,password);
 
-            await updateProfile( dataUser.user, {displayName : `${name} ${lastName}`});
-
-            await sendEmailVerification(dataUser.user);
-               //crea en la tabla
-               //email
-               //company
-               //
-
-               //envio email confirmacion
-               //redirecciom 
-               //console.log(data)
+                await updateProfile( dataUser.user, {displayName : `${name} ${lastName}`});
+    
+                await sendEmailVerification(dataUser.user);
                 return{
                     ok:true,
                     email:dataUser.user.email,
@@ -37,6 +29,20 @@ export const registerUserWithEmailPassword = createAsyncThunk('register/emailPas
                     displayName: dataUser.user.displayName,
     
                 }
+                
+            }catch(e: any){
+                return rejectWithValue(e.response.data)
+
+            }
+               //crea en la tabla
+               //email
+               //company
+               //
+
+               //envio email confirmacion
+               //redirecciom 
+               //console.log(data)
+              
     }
 )
 

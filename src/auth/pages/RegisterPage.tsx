@@ -12,9 +12,6 @@ export const RegisterPage = () => {
 
   const dispatch = useAppDispatch()
 
-  const handleSubmit = () => {
-    console.log('handleSubmit')
-  }
 
   const loginGoogle = () => {
     //handleLoginGoogle()
@@ -32,7 +29,7 @@ export const RegisterPage = () => {
           }}>
             Or continue manually
           </Divider>
-          <RegisterForm handleSubmit={handleSubmit }/>
+          <RegisterForm/>
   
     </Layout>
   )

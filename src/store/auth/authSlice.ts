@@ -1,8 +1,5 @@
-import { createAsyncThunk, createSlice, PayloadAction, } from "@reduxjs/toolkit";
-import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
-import { FirebaseAppAuth } from "../../firebase/config";
-import { authGoogle , registerUserWithEmailPassword } from "../../firebase/providers";
-
+import {  createSlice } from "@reduxjs/toolkit";
+import { authGoogle   } from "../../firebase/providers";
 export interface AuthState {
     status: 'not-authenticated' | 'checking' | 'authenticated',
     uid: string | null,
@@ -20,7 +17,6 @@ const initialState: AuthState = {
     photoURL: null,
     errorMessage: null
 }
-const googleProvider = new GoogleAuthProvider();
 
 //asyncThunk is a function(typePrefix, function return a promise)
 
@@ -43,7 +39,7 @@ export const authSlice = createSlice({
             state.email = null;
             state.photoURL = null;
         },
-        checkingCredentials: (state, action) => {
+        checkingCredentials: () => {
             //handle double clicks, handle double submit 
 
         },
