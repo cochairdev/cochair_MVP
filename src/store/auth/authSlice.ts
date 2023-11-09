@@ -58,7 +58,6 @@ export const authSlice = createSlice({
             state.uid = payload.uid;
             state.name = payload.displayName;
             state.email = payload.email;
-            state.photoURL = payload.photoURL;
         })
         builder.addCase(registerUserWithEmailPassword.rejected, (state, action) => {
 
