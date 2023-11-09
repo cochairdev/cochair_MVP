@@ -1,4 +1,5 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { FirebaseError } from '@firebase/util'
 
 import {  createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, sendEmailVerification} from 'firebase/auth';
 import { FirebaseAppAuth } from './config';
@@ -10,41 +11,37 @@ interface RegisterData{
     name:string
     lastName:string
 }
-export const registerUserWithEmailPassword = createAsyncThunk('register/emailPassword',
-    //Declare the type your function argument here:
-    async (userData:RegisterData, {rejectWithValue}) => {
-        
-        const {email,password, name, lastName} =  userData;
-            try{
-                const dataUser = await createUserWithEmailAndPassword(FirebaseAppAuth, email,password);
-
-                await updateProfile( dataUser.user, {displayName : `${name} ${lastName}`});
+export const registerUserWithEmailPassword = createAsyncThunk<
+    { ok: boolean; email: string | null; uid: string; emailVerified: boolean; displayName: string | null },
+    RegisterData,
+    { rejectValue: string }
+>('register/emailPassword', async (userData, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
     
-                await sendEmailVerification(dataUser.user);
-                return{
-                    ok:true,
-                    email:dataUser.user.email,
-                    uid: dataUser.user.uid,
-                    emailVerified:dataUser.user.emailVerified,
-                    displayName: dataUser.user.displayName,
-    
-                }
-                
-            }catch(e: any){
-                return rejectWithValue(e.response.data)
+    const { email, password, name, lastName } = userData;
 
-            }
-               //crea en la tabla
-               //email
-               //company
-               //
+    try {
+        const dataUser = await createUserWithEmailAndPassword(FirebaseAppAuth, email, password);
 
-               //envio email confirmacion
-               //redirecciom 
-               //console.log(data)
-              
+        await updateProfile(dataUser.user, { displayName: `${name} ${lastName}` });
+
+        await sendEmailVerification(dataUser.user);
+        return {
+            ok: true,
+            email: dataUser.user.email,
+            uid: dataUser.user.uid,
+            emailVerified: dataUser.user.emailVerified,
+            displayName: dataUser.user.displayName,
+        };
+    } catch (e: unknown) {
+        if (e instanceof FirebaseError) {
+            return rejectWithValue(e.message as string);
+        }
+        return rejectWithValue('Unknown error occurred');
     }
-)
+});
+     
+           
 
 export const authGoogle = createAsyncThunk(
     'auth/authGoogle',

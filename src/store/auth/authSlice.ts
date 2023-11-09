@@ -1,5 +1,5 @@
 import {  createSlice } from "@reduxjs/toolkit";
-import { authGoogle   } from "../../firebase/providers";
+import { registerUserWithEmailPassword  } from "../../firebase/providers";
 export interface AuthState {
     status: 'not-authenticated' | 'checking' | 'authenticated',
     uid: string | null,
@@ -49,10 +49,10 @@ export const authSlice = createSlice({
 
     },
     extraReducers: (builder) => {
-        builder.addCase(authGoogle.pending, (state) => {
+        builder.addCase(registerUserWithEmailPassword.pending, (state) => {
             state.status = 'checking'
         })
-        builder.addCase(authGoogle.fulfilled, (state, {payload}) => {
+        builder.addCase(registerUserWithEmailPassword.fulfilled, (state, {payload}) => {
             console.log(payload)
             state.status = 'authenticated';
             state.uid = payload.uid;
@@ -60,9 +60,12 @@ export const authSlice = createSlice({
             state.email = payload.email;
             state.photoURL = payload.photoURL;
         })
-        builder.addCase(authGoogle.rejected, (state, action) => {
+        builder.addCase(registerUserWithEmailPassword.rejected, (state, action) => {
+
+        //state.status = action
             console.log(action.payload)
-            state.status = 'not-authenticated'
+            state.status = 'not-authenticated';
+            state.errorMessage = action.payload as string;
         })
     }
     
