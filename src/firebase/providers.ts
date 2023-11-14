@@ -83,12 +83,12 @@ export const registerUserWithEmailPassword = createAsyncThunk<
      
            
 
-export const authGoogle = createAsyncThunk(
+export const handleLoginWithGoogle = createAsyncThunk(
     'auth/authGoogle',
     async () => {
             
             const result = await signInWithPopup(FirebaseAppAuth, googleProvider);
-            const { displayName, email, photoURL, uid, emailVerified } = result.user;
+            const { displayName, email, photoURL, uid } = result.user;
          
             return {
                 ok: true,
@@ -96,7 +96,6 @@ export const authGoogle = createAsyncThunk(
                 email,
                 photoURL,
                 uid,
-                emailVerified
             }
     }
 )

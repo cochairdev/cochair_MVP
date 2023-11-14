@@ -1,7 +1,7 @@
 import { Routes, Route, Navigate} from "react-router-dom"
 
 import { AppTheme } from "./assets/styles/AppTheme";
-import { CheckingAuth } from "./components/CheckingAuth";
+//import { CheckingAuth } from "./components/CheckingAuth";
 import { DashboardRoutes } from "./dashboard/routes/DashboardRoutes";
 import { useAuth } from "./hooks/useAuth";
 import { AuthRoutes } from "./auth/routes/AuthRoutes";
@@ -15,8 +15,8 @@ function App() {
   //Verificar si el usuario esta logueado
   
   const status = useAuth();
-
-  if(status === 'checking') return <CheckingAuth/>
+  //Spinner action if status === 'checking'
+  //if(status === 'checking') return <CheckingAuth/>
 
   return (
     <AppTheme>

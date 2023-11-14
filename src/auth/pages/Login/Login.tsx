@@ -2,10 +2,15 @@ import { Divider} from '@mui/material'
 import AuthLayout from '../../layout/AuthLayout'
 import { LoginForm } from './components/LoginForm'
 import { LoginSocial } from '../../../components/shared/LoginSocial'
+import { useAppDispatch } from '../../../store'
+import { handleLoginWithGoogle } from '../../../firebase/providers'
 
 export const Login = () => {
+    const dispatch = useAppDispatch();
+
     const handleLoginGoogle = () => {
         console.log('login google')
+        dispatch(handleLoginWithGoogle())
     }
     return (
         <AuthLayout 
