@@ -25,7 +25,7 @@ type Inputs = {
   confirmPassword: string
 }
 export const RegisterForm = () => {
-  const {errorMessage,status} = useAppSelector((state) => state.auth);
+  const {errorMessageRegister,status} = useAppSelector((state) => state.auth);
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
@@ -201,7 +201,7 @@ export const RegisterForm = () => {
       </FormHelperText>
       
       {
-        errorMessage && <p>{errorMessage}</p>
+        errorMessageRegister && <p>{errorMessageRegister}</p>
       }
       <Button
         type="submit"

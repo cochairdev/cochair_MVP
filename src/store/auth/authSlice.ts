@@ -1,5 +1,5 @@
 import {  createSlice } from "@reduxjs/toolkit";
-import { registerUserWithEmailPassword,handleLogoutFirebase  } from "../../firebase/providers";
+import { registerUserWithEmailPassword,handleLogoutFirebase  , handleLoginEmailPassword} from "../../firebase/providers";
 export interface AuthState {
     status: 'not-authenticated' | 'checking' | 'authenticated' ,
     registerMethod: string | null,
@@ -7,7 +7,9 @@ export interface AuthState {
     email: string | null,
     name: string | null,
     photoURL: string | null,
-    errorMessage: string | null
+    errorMessageRegister: string | null,
+    errorMessageLogin: string | null
+
 }
 
 const initialState: AuthState = {
@@ -17,7 +19,9 @@ const initialState: AuthState = {
     email: null,
     name: null,
     photoURL: null,
-    errorMessage: null
+    errorMessageRegister: null,
+    errorMessageLogin: null
+
 }
 
 export const authSlice = createSlice({
@@ -31,9 +35,7 @@ export const authSlice = createSlice({
             state.uid = action.payload.uid;
             state.photoURL = action.payload.photoURL ;
         },
-        setError: (state, action) => {
-            state.errorMessage = action.payload
-        },
+        
         logout: (state) => {
             state.status = 'not-authenticated';
             state.uid = null;
@@ -65,7 +67,7 @@ export const authSlice = createSlice({
         })
         builder.addCase(registerUserWithEmailPassword.rejected, (state, action) => {
             state.status = 'not-authenticated';
-            state.errorMessage = handleErrorMessage(action.payload as string)
+            state.errorMessageRegister = handleErrorMessage(action.payload as string)
         })
         //handleLogoutFirebase
         builder.addCase(handleLogoutFirebase.pending, (state) => {
@@ -77,6 +79,21 @@ export const authSlice = createSlice({
             state.name = null;
             state.email = null;
         })
+        //handleLoginEmailPassword
+        builder.addCase(handleLoginEmailPassword.pending, (state) => {
+            state.status = 'checking'
+            state.errorMessageLogin = null;
+        })
+        builder.addCase(handleLoginEmailPassword.fulfilled, (state, {payload}) => {
+            state.status = 'authenticated';
+            state.name = payload.displayName;   
+            state.email = payload.email;
+            state.errorMessageLogin = null;
+        })
+        builder.addCase(handleLoginEmailPassword.rejected, (state, action) => {
+            state.status = 'not-authenticated';
+            state.errorMessageLogin = handleErrorMessage(action.payload as string)
+        })
     }
     
 })
@@ -84,8 +101,8 @@ const handleErrorMessage = (error: string) => {
     switch (error) {
         case 'Firebase: Error (auth/email-already-in-use).':
             return 'Email already in use';
-        case 'auth/invalid-email':
-            return 'Invalid email';
+        case 'Firebase: Error (auth/invalid-login-credentials).':
+            return 'Email or password incorrect';
         case 'auth/weak-password':
             return 'Weak password';
         default:

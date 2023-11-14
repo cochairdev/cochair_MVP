@@ -2,7 +2,7 @@ import { createAsyncThunk } from "@reduxjs/toolkit";
 import { FirebaseError } from '@firebase/util'
 import { collection, addDoc } from "firebase/firestore"; 
 
-import {  createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, sendEmailVerification} from 'firebase/auth';
+import {  createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup, updateProfile, sendEmailVerification, signInWithEmailAndPassword} from 'firebase/auth';
 import { FirebaseAppAuth, FirebaseDB } from './config';
 
 const googleProvider = new GoogleAuthProvider();
@@ -17,6 +17,29 @@ export const handleLogoutFirebase = createAsyncThunk("auth/handleLogout", async 
     return await FirebaseAppAuth.signOut();
 
 });
+export const handleLoginEmailPassword = createAsyncThunk<
+    {ok:boolean, email:string | null,displayName: string | null },
+    {email:string, password:string},
+    { rejectValue: string}
+>("auth/handleLoginEmailPassword", async (data: {email:string, password:string}, thunkAPI) => {
+    const { rejectWithValue } = thunkAPI;
+    const {email, password} = data;
+    console.log(data)
+    try {
+        const { user } = await signInWithEmailAndPassword(FirebaseAppAuth, email, password);
+        console.log(user)
+        return {
+            ok: true,
+            email: user.email,
+            displayName: user.displayName
+        }
+    } catch (e: unknown) {
+        if (e instanceof FirebaseError) {
+            return rejectWithValue(e.message as string);
+        }
+        return rejectWithValue('Unknown error occurred');
+    }
+})
 export const registerUserWithEmailPassword = createAsyncThunk<
     { ok: boolean; email: string | null; displayName: string | null ; registerMethod: string},
     RegisterData,

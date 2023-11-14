@@ -8,109 +8,116 @@ import {
   InputLabel,
   FormHelperText,
 } from "@mui/material";
+import { useForm, SubmitHandler , Controller} from "react-hook-form"
 
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
-import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { initLoginState } from "../../../../lib";
-import { useAppSelector } from "../../../../store";
+import { useAppSelector, useAppDispatch } from "../../../../store";
+import { handleLoginEmailPassword } from "../../../../firebase/providers";
+
+type Inputs = {
+  email: string
+  password: string
+
+}
 
 export const LoginForm = () => {
 
-  const {status} = useAppSelector((state) => state.auth);
+  const {errorMessageLogin, status} = useAppSelector((state) => state.auth);
+  const dispatch = useAppDispatch();
 
   const isAutenticating = useMemo(() => status === 'checking', [status]);
 
-  const [showPassword, setShowPassword] = useState(false);
-  const [loginForm, setLoginForm] = useState(initLoginState);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {event.preventDefault();};
+  const { control, handleSubmit , formState, trigger} = useForm({
+    defaultValues: {
+      email:"",
+      password: "",
+    },
+  })
+  const {errors,  isDirty, isValid } = formState;
 
-  const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value, id } = e.target;
-
-    const newInputs = [...loginForm];
-    const index = newInputs.findIndex((item) => item.id === id);
-    const input = newInputs[index];
-    const isValid = input.isValid(value);
-
-    newInputs[index] = {
-      ...input,
-      value,
-      error: !isValid,
-      helperText: input.getHelperText(!isValid),
-    };
-
-    setLoginForm(newInputs);
-
-  };
-  const handleFormSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    //const data = new FormData(event.currentTarget);
-    //handleSubmit();
-
-
-  };
-
+  const onSubmit: SubmitHandler<Inputs> = ({email,password}) => {
+    dispatch(handleLoginEmailPassword({email:email, password:password}))
+  }
   return (
     <Box
       component="form"
       noValidate
-      onSubmit={handleFormSubmit}
+      onSubmit={handleSubmit(onSubmit)}
       sx={{ display: "flex", flexDirection: "column", gap: 1.5 }}
     >
-       
-      <TextField
-        id={loginForm[0].id}
+       <Controller
         name="email"
-        label="Email"
-        type="email"
-        fullWidth
-        helperText={loginForm[0].helperText}
-        value={loginForm[0].value}
-        error={loginForm[0].error}
-        onChange={onChange}
-      />
+        control={control}
+        rules={{
+          required: 'Email is required',
+          pattern: {
+            value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
+            message: 'Invalid email address',
+          },
+        }}
+        render={({ field }) => <TextField {...field} fullWidth label="Email" onBlur={() => trigger('email')} error={!!errors.email} helperText={errors.email?.message}/>} 
+       />
 
-      <FormControl fullWidth variant="outlined">
+       <FormControl fullWidth variant="outlined">
         <InputLabel htmlFor="password">Password</InputLabel>
-        <OutlinedInput
-          id={loginForm[1].id}
+        <Controller
           name="password"
-          value={loginForm[1].value}
-          error={loginForm[1].error}
-          onChange={onChange}
-          type={showPassword ? "text" : "password"}
-          endAdornment={
-            <InputAdornment position="end">
-              <IconButton
-                aria-label="toggle password visibility"
-                onClick={handleClickShowPassword}
-                onMouseDown={handleMouseDownPassword}
-                edge="end"
-              >
-                {showPassword ? <Visibility /> : <VisibilityOff />}
-              </IconButton>
-            </InputAdornment>
-          }
-          label="Password"
-        />
-        {loginForm[1].error && (
-          <FormHelperText error id="accountId-error" sx={{ marginLeft: 0 }}>
-            {loginForm[1].helperText}
-          </FormHelperText>
-        )}
-      </FormControl>
+          control={control}
+          defaultValue=""
+          rules={{
+            required: 'Password is required',
+            
+          }}
+          render={({ field }) => (
+            <OutlinedInput
+              id="password"
+              {...field}
+              type={showConfirmPassword ? "text" : "password"}
+              endAdornment={
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    onClick={handleClickShowConfirmPassword}
+                    edge="end"
+                  >
+                    <VisibilityOff />
+                  </IconButton>
+                </InputAdornment>
+              }
+              onBlur={() => trigger('password')} 
 
+              label="Password"
+              error={!!errors.password}
+            />
+          )}
+        />
+        {
+          errors.password?.message && (
+            <FormHelperText error id="accountId-error" sx={{ marginLeft: 0 }}>
+           { errors.password?.message}
+    
+          </FormHelperText>
+          )
+
+        }
+    
+      </FormControl>
+      
+      {
+        errorMessageLogin && <p>{errorMessageLogin}</p>
+      }
       <Button
         type="submit"
-        disabled={loginForm[1].error || loginForm[0].error || loginForm[0].value === '' || loginForm[1].value === '' || isAutenticating}
+        disabled={!isDirty || !isValid || isAutenticating}
         fullWidth
         variant="contained"
         sx={{
