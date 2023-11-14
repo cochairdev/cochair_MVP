@@ -1,29 +1,41 @@
-import { Routes, Route} from "react-router-dom"
-import { AuthRoutes } from './auth/routes/AuthRoutes';
-import { DashboardRoutes } from './dashboard/routes/DashboardRoutes';
-import { AppTheme } from "./theme/AppTheme";
+import { Routes, Route, Navigate} from "react-router-dom"
 
+import { AppTheme } from "./assets/styles/AppTheme";
+import { CheckingAuth } from "./components/CheckingAuth";
+import { DashboardRoutes } from "./dashboard/routes/DashboardRoutes";
+import { useAuth } from "./hooks/useAuth";
+import { AuthRoutes } from "./auth/routes/AuthRoutes";
 function App() {
 
+  //onAuthStateChange 
+  //Redirigir si es la primera vez 
+  //Redirigir si viene el codigo 
+
+  //Verificar si el usuario esta verificado
+  //Verificar si el usuario esta logueado
+  
+  const status = useAuth();
+
+  if(status === 'checking') return <CheckingAuth/>
 
   return (
     <AppTheme>
+      
         <Routes>
+          {
+            status === 'authenticated' ?
 
-        {/* auth routes */}
-        <Route path="/auth/*" element={<AuthRoutes/>} />
-        {/* journal router */}
-        <Route path="/*" element={<DashboardRoutes/>}/>
-        
+            <Route path="/*" element={ <DashboardRoutes/>}/>
+            :
+            <Route path="/auth/*" element={<AuthRoutes/>}/>
+          }
+          
+          <Route path='/*' element={ <Navigate to='/auth/login' />  } />
 
+
+      
         </Routes>
     </AppTheme>
   )
 }
-
-export default App
-/*<select className="custom-select" style={{width: 200}} onChange={onClickLanguageChange}>
-<option value="en-UX" >English</option>
-<option value="es-MX" >Spanish</option>
-</select>
-*/
+export default App;

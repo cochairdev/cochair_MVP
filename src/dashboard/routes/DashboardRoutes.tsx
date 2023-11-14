@@ -1,32 +1,15 @@
-import { Routes, Route } from "react-router-dom";
-import { DashboardPage } from "../pages";
-import { Home , Matchmaking, Contacts, Messages, Challenges} from '../views';
+import { Routes, Route, Navigate } from "react-router-dom"
+import { Dashboard } from "../Dashboard"
+import { Profile } from "../Profile";
 
 export const DashboardRoutes = () => {
   return (
     <Routes>
-      <Route path="/" element={<DashboardPage />} >
-        <Route
-            path="/home"
-            element={< Home/>}
-          />
-          <Route
-          path="/matchmaking"
-          element={<Matchmaking/>}
-        />
-        <Route
-          path="/contacts"
-          element={<Contacts/>}
-        />
-        <Route
-          path="/messages"
-          element={<Messages/>}
-        />
-        <Route
-          path="/challenges"
-          element={<Challenges/>}
-        />
-      </Route>
+        <Route path="dashboard" element={<Dashboard />} />
+        <Route path="profile" element={<Profile />} />
+        <Route path='/*' element={<Navigate to="/dashboard" />} />
+      
+
     </Routes>
-  );
-};
+  )
+}
