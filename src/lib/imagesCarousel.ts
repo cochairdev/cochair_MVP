@@ -1,6 +1,6 @@
 import ImageCarousel_1 from '../assets/images/cochair_1.png';
 
-export const images =[
+export const imagesCarousel =[
     {
         label: 'Simplify Networking',
         imgPath: ImageCarousel_1

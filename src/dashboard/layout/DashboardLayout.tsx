@@ -32,7 +32,7 @@ const AppBar = styled(MuiAppBar, {
   }),
 }));
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
    
     const [open, setOpen] = useState(true);
 
@@ -64,4 +64,4 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export default Layout;
+export default DashboardLayout;

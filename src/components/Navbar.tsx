@@ -11,8 +11,9 @@ import {
 import MenuUser from "./MenuUser";
 
 import MenuIcon from "@mui/icons-material/Menu";
+import { useAppDispatch } from "../store";
 
-const settings = ["My settings", "Profile", "Logout"];
+import { handleLogoutFirebase } from "../firebase/providers";
 
 interface Props {
   open: boolean;
@@ -20,13 +21,26 @@ interface Props {
 }
 
 export const Navbar = ({ open, handleDrawerOpen }: Props) => {
+ 
+  const dispatch = useAppDispatch();
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
+  
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
+  const handleSettings = () =>{
+    console.log("settings")
+  }
+  const handleProfile = () =>{
+    console.log("profile")
+  }
+
+  const handleLogout = () =>{
+    dispatch(handleLogoutFirebase())
+  }
 
   return (
     <Toolbar>
@@ -65,11 +79,17 @@ export const Navbar = ({ open, handleDrawerOpen }: Props) => {
         open={Boolean(anchorElUser)}
         onClose={handleCloseUserMenu}
       >
-        {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
-            <Typography textAlign="center">{setting}</Typography>
+          <MenuItem key="profile" onClick={handleSettings}>
+            <Typography textAlign="center">My profile</Typography>
           </MenuItem>
-        ))}
+
+          <MenuItem key="settings" onClick={handleProfile}>
+            <Typography textAlign="center">Settings</Typography>
+          </MenuItem>
+
+          <MenuItem key="logout" onClick={handleLogout}>
+            <Typography textAlign="center">Log out</Typography>
+          </MenuItem>
       </Menu>
     </Toolbar>
   );

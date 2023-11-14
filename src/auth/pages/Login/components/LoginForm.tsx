@@ -14,11 +14,8 @@ import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
-import { initLoginState } from "../../../../../lib";
-import { useAppSelector } from "../../../../../store";
-interface LoginForm {
-  //handleSubmit?: () => void;
-}
+import { initLoginState } from "../../../../lib";
+import { useAppSelector } from "../../../../store";
 
 export const LoginForm = () => {
 
@@ -33,9 +30,7 @@ export const LoginForm = () => {
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.preventDefault();
-  };
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {event.preventDefault();};
 
   const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { value, id } = e.target;
