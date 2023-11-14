@@ -109,4 +109,4 @@ const handleErrorMessage = (error: string) => {
             return 'Unknown error occurred';
     }
 }
-export const { login, logout, checkingCredentials, loginWithGoogle , setError, savingNewUser} = authSlice.actions;
+export const { login, logout, checkingCredentials, loginWithGoogle , savingNewUser} = authSlice.actions;
