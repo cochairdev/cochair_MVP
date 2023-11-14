@@ -3,7 +3,8 @@ import {
     registerUserWithEmailPassword,
     handleLogoutFirebase,
     handleLoginEmailPassword,
-    handleLoginWithGoogle
+    handleLoginWithGoogle,
+    registerUserWithGoogle
 } from "../../firebase/providers";
 export interface AuthState {
     status: 'not-authenticated' | 'checking' | 'authenticated' ,
@@ -114,17 +115,34 @@ export const authSlice = createSlice({
             state.status = 'not-authenticated';
             state.errorMessageLogin = handleErrorMessage(action.payload as string)
         })
+        //handleLoginWithGoogle
+        builder.addCase(registerUserWithGoogle.pending, (state) => {
+            state.status = 'checking'
+            state.errorMessageLogin = null;
+        })
+        builder.addCase(registerUserWithGoogle.fulfilled, (state, {payload}) => {
+            state.status = 'authenticated';
+            state.name = payload.displayName;   
+            state.email = payload.email;
+            state.errorMessageLogin = null;
+        })
+        builder.addCase(registerUserWithGoogle.rejected, (state, action) => {
+            state.status = 'not-authenticated';
+            state.errorMessageLogin = handleErrorMessage(action.payload as string)
+        })
     }
     
 })
 const handleErrorMessage = (error: string) => {
+    console.log(error)
     switch (error) {
+
         case 'Firebase: Error (auth/email-already-in-use).':
             return 'Email already in use';
         case 'Firebase: Error (auth/invalid-login-credentials).':
             return 'Email or password incorrect';
-        case 'auth/weak-password':
-            return 'Weak password';
+        case 'User already exists':
+            return 'User already exists';
         default:
             return 'Unknown error occurred';
     }
