@@ -3,8 +3,8 @@ import { Routes, Route, Navigate} from "react-router-dom"
 import { AppTheme } from "./assets/styles/AppTheme";
 //import { CheckingAuth } from "./components/CheckingAuth";
 import { DashboardRoutes } from "./dashboard/routes/DashboardRoutes";
-import { useAuth } from "./hooks/useAuth";
 import { AuthRoutes } from "./auth/routes/AuthRoutes";
+import { useAuth } from "./hooks";
 function App() {
 
   //onAuthStateChange 
@@ -14,23 +14,24 @@ function App() {
   //Verificar si el usuario esta verificado
   //Verificar si el usuario esta logueado
   
-  const status = useAuth();
   //Spinner action if status === 'checking'
   //if(status === 'checking') return <CheckingAuth/>
+  const status = useAuth();
 
   return (
     <AppTheme>
       
         <Routes>
-          {
-            status === 'authenticated' ?
+            {
+              (status === 'authenticated')? 
+            <Route path="/*" element={<DashboardRoutes/>}/>
 
-            <Route path="/*" element={ <DashboardRoutes/>}/>
             :
-            <Route path="/auth/*" element={<AuthRoutes/>}/>
-          }
+            <Route path="/auth/*" element={ <AuthRoutes/>}/>
+
+            }
           
-          <Route path='/*' element={ <Navigate to='/auth/login' />  } />
+          <Route path='/*' element={ <Navigate to="/auth/login" /> } />
 
 
       

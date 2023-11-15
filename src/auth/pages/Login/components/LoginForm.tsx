@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 
 import {
   Button,
@@ -7,6 +7,7 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
+  Alert
 } from "@mui/material";
 import { useForm, SubmitHandler , Controller} from "react-hook-form"
 
@@ -16,6 +17,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { useAppSelector, useAppDispatch } from "../../../../store";
 import { handleLoginEmailPassword } from "../../../../firebase/providers";
+import { useNavigate } from "react-router-dom";
 
 type Inputs = {
   email: string
@@ -25,8 +27,9 @@ type Inputs = {
 
 export const LoginForm = () => {
 
-  const {errorMessageLogin, status} = useAppSelector((state) => state.auth);
+  const {errorMessageLogin,status, success} = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   const isAutenticating = useMemo(() => status === 'checking', [status]);
 
@@ -47,6 +50,10 @@ export const LoginForm = () => {
   const onSubmit: SubmitHandler<Inputs> = ({email,password}) => {
     dispatch(handleLoginEmailPassword({email:email, password:password}))
   }
+  useEffect(() => {
+    if (success) navigate('/dashboard')
+
+  }, [success, navigate])
   return (
     <Box
       component="form"
@@ -111,10 +118,10 @@ export const LoginForm = () => {
         }
     
       </FormControl>
-      
       {
-        errorMessageLogin && <p>{errorMessageLogin}</p>
+        errorMessageLogin && <Alert severity="error">{errorMessageLogin}</Alert>
       }
+      
       <Button
         type="submit"
         disabled={!isDirty || !isValid || isAutenticating}

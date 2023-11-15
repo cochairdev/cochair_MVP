@@ -1,17 +1,29 @@
-
+import { useEffect } from 'react';
 import {  Divider } from '@mui/material';
 import { RegisterForm } from "./components/RegisterForm";
 import AuthLayout from "../../layout/AuthLayout";
 import { LoginSocial } from '../../../components/shared/LoginSocial';
+import { useAppDispatch, useAppSelector } from '../../../store';
+import { registerUserWithGoogle } from '../../../firebase/providers';
+import { useNavigate } from 'react-router-dom';
+
+
 export const Register = () => {
+  const {  success} = useAppSelector((state) => state.auth);
 
-
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate()
 
   const loginGoogle = () => {
-    //handleLoginGoogle()
-   // dispatch(authGoogle())
-
+    
+     dispatch(registerUserWithGoogle({registerMethod:'google'}))
+    
   }
+
+  useEffect(() => {
+    if (success) navigate('/dashboard')
+
+  }, [success, navigate])
 
   return (
     <AuthLayout 

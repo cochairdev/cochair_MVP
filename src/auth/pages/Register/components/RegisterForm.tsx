@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useForm, SubmitHandler , Controller} from "react-hook-form"
 
 import {
@@ -8,6 +8,8 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
+  CircularProgress,
+  Alert
 } from "@mui/material";
 
 import InputAdornment from "@mui/material/InputAdornment";
@@ -16,6 +18,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import { registerUserWithEmailPassword } from "../../../../firebase/providers";
 import { useAppDispatch, useAppSelector } from "../../../../store";
+import { useNavigate } from "react-router-dom";
 type Inputs = {
   name: string
   lastName: string
@@ -25,10 +28,11 @@ type Inputs = {
   confirmPassword: string
 }
 export const RegisterForm = () => {
-  const {errorMessageRegister,status} = useAppSelector((state) => state.auth);
+  const {errorMessageRegister,status, success} = useAppSelector((state) => state.auth);
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   
+  const navigate = useNavigate()
 
   const dispatch = useAppDispatch();
 
@@ -55,6 +59,10 @@ export const RegisterForm = () => {
     dispatch(registerUserWithEmailPassword({ email,password, name,lastName, company, }))
 
   }
+  useEffect(() => {
+    if (success) navigate('/dashboard')
+
+  }, [success, navigate])
   return (
     <Box
       component="form"
@@ -195,13 +203,14 @@ export const RegisterForm = () => {
         
       </Box>
       
-      <FormHelperText error id="accountId-error" sx={{ marginLeft: 0 }}>
-        {errors.password?.message || errors.confirmPassword?.message}
-
+      <FormHelperText error={errors.password?.message   || errors.confirmPassword?.message  ? true : false} id="accountId-error" sx={{ marginLeft: 0 }}>
+        
+        {errors.password?.message || errors.confirmPassword?.message ? errors.password?.message || errors.confirmPassword?.message : 'Must be at least 8 characters, including both numbers and letters'}
+        
       </FormHelperText>
       
       {
-        errorMessageRegister && <p>{errorMessageRegister}</p>
+        errorMessageRegister && <Alert severity="error">{errorMessageRegister}</Alert>
       }
       <Button
         type="submit"
@@ -216,7 +225,7 @@ export const RegisterForm = () => {
 
         }}
       >
-        Sign up
+               {status === 'checking' ? <CircularProgress /> : ' Sign up'}
       </Button>
     </Box>
   );
