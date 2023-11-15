@@ -66,6 +66,8 @@ export const authSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(registerUserWithEmailPassword.pending, (state) => {
             state.status = 'checking'
+            state.errorMessageLogin = null;
+
         })
         builder.addCase(registerUserWithEmailPassword.fulfilled, (state, {payload}) => {
             state.status = 'authenticated';
@@ -83,6 +85,7 @@ export const authSlice = createSlice({
         //handleLogoutFirebase
         builder.addCase(handleLogoutFirebase.pending, (state) => {
             state.status = 'checking'
+
         })
         builder.addCase(handleLogoutFirebase.fulfilled, (state) => {
             state.status='not-authenticated',
@@ -125,9 +128,12 @@ export const authSlice = createSlice({
         builder.addCase(handleLoginWithGoogle.pending, (state) => {
             state.status = 'checking'
             state.errorMessageLogin = null;
+
         })
         builder.addCase(handleLoginWithGoogle.fulfilled, (state, {payload}) => {
             state.status = 'authenticated';
+            state.success = true;
+
             state.name = payload.displayName;   
             state.email = payload.email;
             state.errorMessageLogin = null;
