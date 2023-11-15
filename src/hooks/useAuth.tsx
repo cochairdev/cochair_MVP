@@ -1,24 +1,24 @@
 import {useEffect} from 'react'
-import { useAppDispatch, useAppSelector } from '../store';
-import { FirebaseAppAuth } from '../firebase/config';
-import { logout, login} from '../store/auth';
-import {  onAuthStateChanged } from "firebase/auth";
+//import { useAppDispatch, useAppSelector } from '../store';
+//import { FirebaseAppAuth } from '../firebase/config';
+//import { logout, login} from '../store/auth';
+//import {  onAuthStateChanged } from "firebase/auth";
 
 export const useAuth = () => {
-    const {status} = useAppSelector((state) => state.auth);
+  //  const {status} = useAppSelector((state) => state.auth);
 
-    const dispatch = useAppDispatch();
+//    const dispatch = useAppDispatch();
   
   
     useEffect(() => {
       // firebase listener function 
-      onAuthStateChanged(FirebaseAppAuth, (user) => {
+      //onAuthStateChanged(FirebaseAppAuth, (user) => {
   
-        if(!user) return dispatch(logout())
-          const{uid, displayName, email, photoURL} = user;
+        //if(!user) return dispatch(logout())
+          //const{uid, displayName, email, photoURL} = user;
   
-          dispatch(login({uid, displayName, email, photoURL}))
-        });
+          //dispatch(login({uid, displayName, email, photoURL}))
+       // });
         
     },[])
     return status;

@@ -12,7 +12,7 @@ export default function MenuUser() {
       <Grid container spacing={1} alignItems="center">
         <Grid item>
           <IconButton  sx={{ p: 0 }}>
-            <Avatar alt="Remy Sharp" src="/static/images/avatar/2.jpg" />
+            <Avatar alt="Remy Sharp" src="https://api.dicebear.com/7.x/initials/svg?seed=JhonDoe" />
           </IconButton>
         </Grid>  
         <Grid item>

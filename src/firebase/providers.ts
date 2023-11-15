@@ -20,6 +20,7 @@ export const handleLogoutFirebase = createAsyncThunk("auth/handleLogout", async 
     return await FirebaseAppAuth.signOut();
 
 });
+
 export const handleLoginEmailPassword = createAsyncThunk<
     {ok:boolean, email:string | null,displayName: string | null },
     {email:string, password:string},
@@ -79,21 +80,18 @@ export const registerUserWithGoogle = createAsyncThunk<
                 status:'authenticated'
             };
         } else{
-            throw new Error('User already exists');
-
-            
+            throw new Error('User already exists');       
         }
         
     } catch (e: unknown) {
+        const message = e instanceof Error ? e.message : 'Unknown error occurred';
         if (e instanceof FirebaseError) {
-            console.log(e)
             return rejectWithValue(e.message as string);
         }
-        return rejectWithValue('Unknown error occurred');
+        return rejectWithValue(message);
     }
 });
     
-  //
 export const registerUserWithEmailPassword = createAsyncThunk<
     { ok: boolean; email: string | null; displayName: string | null ; registerMethod: string},
     RegisterData,
