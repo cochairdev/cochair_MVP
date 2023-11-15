@@ -203,9 +203,10 @@ export const RegisterForm = () => {
         
       </Box>
       
-      <FormHelperText error id="accountId-error" sx={{ marginLeft: 0 }}>
-        {errors.password?.message || errors.confirmPassword?.message}
-
+      <FormHelperText error={errors.password?.message   || errors.confirmPassword?.message  ? true : false} id="accountId-error" sx={{ marginLeft: 0 }}>
+        
+        {errors.password?.message || errors.confirmPassword?.message ? errors.password?.message || errors.confirmPassword?.message : 'Must be at least 8 characters, including both numbers and letters'}
+        
       </FormHelperText>
       
       {
