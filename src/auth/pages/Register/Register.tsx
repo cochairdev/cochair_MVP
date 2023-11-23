@@ -6,10 +6,11 @@ import { LoginSocial } from '../../../components/shared/LoginSocial';
 import { useAppDispatch, useAppSelector } from '../../../store';
 import { registerUserWithGoogle } from '../../../firebase/providers';
 import { useNavigate } from 'react-router-dom';
+import { clearState } from '../../../store/auth';
 
 
 export const Register = () => {
-  const {  success} = useAppSelector((state) => state.auth);
+  const { success,email } = useAppSelector((state) => state.auth);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
@@ -21,9 +22,12 @@ export const Register = () => {
   }
 
   useEffect(() => {
-    if (success) navigate('/dashboard')
+    if (success){
+      navigate(`/auth/verification-email?email=${email}`);
+      dispatch(clearState())
+    } 
 
-  }, [success, navigate])
+  }, [success, navigate, email, dispatch])
 
   return (
     <AuthLayout 

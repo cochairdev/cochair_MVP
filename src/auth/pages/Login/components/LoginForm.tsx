@@ -27,11 +27,9 @@ type Inputs = {
 
 export const LoginForm = () => {
 
-  const {errorMessageLogin,status, success} = useAppSelector((state) => state.auth);
+  const {errorMessageLogin, success} = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const navigate = useNavigate()
-
-  const isAutenticating = useMemo(() => status === 'checking', [status]);
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -51,9 +49,10 @@ export const LoginForm = () => {
     dispatch(handleLoginEmailPassword({email:email, password:password}))
   }
   useEffect(() => {
-    if (success) navigate('/dashboard')
+    if (success) navigate('/auth/verification-email')
 
   }, [success, navigate])
+
   return (
     <Box
       component="form"
@@ -124,7 +123,7 @@ export const LoginForm = () => {
       
       <Button
         type="submit"
-        disabled={!isDirty || !isValid || isAutenticating}
+        disabled={!isDirty || !isValid }
         fullWidth
         variant="contained"
         sx={{
@@ -134,7 +133,7 @@ export const LoginForm = () => {
           textTransform: "none",
         }}
       >
-        Sign up
+        Log in
       </Button>
     </Box>
   );
