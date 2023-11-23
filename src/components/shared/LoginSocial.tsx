@@ -3,18 +3,20 @@ import { Button,Box } from '@mui/material';
   
   import LinkedlnIcon from '@mui/icons-material/LinkedIn';
   import GoogleIcon from '@mui/icons-material/Google';
+import { useAppSelector } from '../../store';
 
   interface Props{
     handleLoginGoogle :() => void
   }
   
   export const LoginSocial = ({handleLoginGoogle}: Props) => {
-    
+    const { status } = useAppSelector((state) => state.auth);
+
     return (
       <Box sx={{ display: 'flex', flexDirection: 'row', gap: 1.5 }}>
       <Button
         fullWidth
-        
+        disabled={status === 'checking' ? true : false}
         size="large"
         variant="outlined"
         startIcon={<GoogleIcon />}
@@ -30,6 +32,7 @@ import { Button,Box } from '@mui/material';
       </Button>
       <Button
         fullWidth
+        disabled={status === 'checking' ? true : false}
         size="large"
         variant="outlined"
         startIcon={<LinkedlnIcon />}

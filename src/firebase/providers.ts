@@ -117,7 +117,7 @@ export const registerUserWithEmailPassword = createAsyncThunk<
         }
         const refDoc= collection(FirebaseDB, "users")
         await addDoc(refDoc, newUser);
-        
+
         await sendEmailVerification(dataUser.user);
         return {
             ok: true,
@@ -152,28 +152,3 @@ export const handleLoginWithGoogle = createAsyncThunk(
     }
 )
 
-export const sendVerificationEmail = createAsyncThunk<
-    { ok: boolean },
-    unknown,
-    { rejectValue: string }
->('auth/sendVerificationEmail', async (_ , thunkAPI) => {
-    const { rejectWithValue } = thunkAPI;
-
-
-    try {
-        const user = FirebaseAppAuth.currentUser;
-        if (user) {
-            await sendEmailVerification(user);
-
-            return { ok: true };
-        } else {
-            throw new Error('User not found');
-        }
-    } catch (e: unknown) {
-        
-        if (e instanceof FirebaseError) {
-            return rejectWithValue(e.message as string);
-        }
-        return rejectWithValue('Unknown error occurred');
-    }
-});
