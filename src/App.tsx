@@ -2,11 +2,9 @@ import { Routes, Route, Navigate} from "react-router-dom"
 
 import { AppTheme } from "./assets/styles/AppTheme";
 //import { CheckingAuth } from "./components/CheckingAuth";
-import { Login } from "./auth/pages/Login";
-import { Register } from "./auth/pages/Register";
-import { RequireAuth } from "./components/common/permission/RequireAuth";
-import { Dashboard } from "@mui/icons-material";
-import { Verification } from "./auth/pages/Verification";
+import { DashboardRoutes } from "./dashboard/routes/DashboardRoutes";
+import { AuthRoutes } from "./auth/routes/AuthRoutes";
+import { useAuth } from "./hooks";
 function App() {
 
   //onAuthStateChange 
@@ -18,22 +16,25 @@ function App() {
   
   //Spinner action if status === 'checking'
   //if(status === 'checking') return <CheckingAuth/>
+  const status = useAuth();
 
   return (
     <AppTheme>
       
         <Routes>
+            {
+              (status === 'authenticated')? 
+            <Route path="/*" element={<DashboardRoutes/>}/>
 
-            <Route path="/auth/login" element={<Login/>}/>
-            <Route path="/auth/register" element={<Register/>}/>
-            <Route path="/auth/verification-email" element={<Verification/>}/>
-            <Route path="/auth/email-verified" element={<h1>EmailVerified</h1> }/>
-            <Route path="/dashboard" element={<RequireAuth><Dashboard/></RequireAuth>}>
+            :
+            <Route path="/auth/*" element={ <AuthRoutes/>}/>
+
+            }
           
-            </Route>
-            
-            <Route path='/*' element={ <Navigate to="/auth/login" /> } />
+          <Route path='/*' element={ <Navigate to="/auth/login" /> } />
 
+
+      
         </Routes>
     </AppTheme>
   )

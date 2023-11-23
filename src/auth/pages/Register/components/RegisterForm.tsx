@@ -1,4 +1,4 @@
-import {  useState, useEffect } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { useForm, SubmitHandler , Controller} from "react-hook-form"
 
 import {
@@ -8,6 +8,7 @@ import {
   FormControl,
   InputLabel,
   FormHelperText,
+  CircularProgress,
   Alert
 } from "@mui/material";
 
@@ -27,18 +28,18 @@ type Inputs = {
   confirmPassword: string
 }
 export const RegisterForm = () => {
-  const {errorMessageRegister, success} = useAppSelector((state) => state.auth);
+  const {errorMessageRegister,status, success} = useAppSelector((state) => state.auth);
 
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
-
   
   const navigate = useNavigate()
 
   const dispatch = useAppDispatch();
 
+  const isAutenticating = useMemo(() => status === 'checking', [status]);
+
+
   const handleClickShowConfirmPassword = () => setShowConfirmPassword((show) => !show);
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
 
 
   
@@ -59,7 +60,7 @@ export const RegisterForm = () => {
 
   }
   useEffect(() => {
-    if (success) navigate('/auth/confirm-email')
+    if (success) navigate('/dashboard')
 
   }, [success, navigate])
   return (
@@ -79,10 +80,6 @@ export const RegisterForm = () => {
             value: 3,
             message: 'Min length is 3'
           },
-          pattern: {
-            value: /^[A-Za-z]+$/,
-            message: 'Only letters are allowed',
-          },
         }}
         render={({ field }) => <TextField {...field} fullWidth label="First name" onBlur={() => trigger('name')} error={!!errors.name} helperText={errors.name?.message}/>} 
       />
@@ -94,10 +91,6 @@ export const RegisterForm = () => {
           minLength: {
             value: 2,
             message: '2 characters required minimum'
-          },
-          pattern: {
-            value: /^[A-Za-z]+$/,
-            message: 'Only letters are allowed',
           },
         }}
         render={({ field }) => <TextField {...field} fullWidth label="Last name" onBlur={() => trigger('lastName')} error={!!errors.lastName} helperText={errors.lastName?.message}/>} 
@@ -148,12 +141,12 @@ export const RegisterForm = () => {
             <OutlinedInput
               id="password"
               {...field}
-              type={showPassword ? "text" : "password"}
+              type={showConfirmPassword ? "text" : "password"}
               endAdornment={
                 <InputAdornment position="end">
                   <IconButton
                     aria-label="toggle password visibility"
-                    onClick={handleClickShowPassword}
+                    onClick={handleClickShowConfirmPassword}
                     edge="end"
                   >
                     <VisibilityOff />
@@ -222,7 +215,7 @@ export const RegisterForm = () => {
       <Button
         type="submit"
         fullWidth
-        disabled={!isDirty || !isValid}
+        disabled={!isDirty || !isValid || isAutenticating}
         variant="contained"
         sx={{
           backgroundColor: "#3F51B5",
@@ -232,7 +225,7 @@ export const RegisterForm = () => {
 
         }}
       >
-          Sign up
+               {status === 'checking' ? <CircularProgress /> : ' Sign up'}
       </Button>
     </Box>
   );

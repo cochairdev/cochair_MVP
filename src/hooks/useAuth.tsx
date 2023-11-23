@@ -13,13 +13,12 @@ export const useAuth = () => {
     useEffect(() => {
       // firebase listener function 
       onAuthStateChanged(FirebaseAppAuth, (user) => {
-        
+  
         if(!user) return dispatch(logout())
           const{uid, displayName, email, photoURL} = user;
-            if(user.emailVerified === false) return dispatch(logout())
-            dispatch(login({uid, displayName, email, photoURL}))
+  
+        dispatch(login({uid, displayName, email, photoURL}))
         });
-        
         
     },[dispatch])
     return status;
